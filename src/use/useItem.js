@@ -35,7 +35,7 @@ export default function useItem (props) {
         activeRecordIndex(route, currentRoute) === currentRoute.matched.length - 1 &&
         isSameRouteLocationParams(currentRoute.params, route.params)
     } else {
-      // would be nice to have a prop to only trigger if say sidebar os isomg external router configuration
+      // would be nice to have a prop to only trigger if say sidebar is using external router configuration
       // for now checking if linkComponentName is not default SidebarMenuLink, which is appropriate
       if(vue.getCurrentInstance().setupState.linkComponentName !== 'SidebarMenuLink'){
           // not sure if there's another way
