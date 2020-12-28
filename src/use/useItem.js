@@ -20,6 +20,9 @@ export default function useItem (props) {
   })
 
   const exactActive = computed(() => {
+    // props.item.href doesn't exist for parents to ensure link isn't followed by inertia
+    // so you end up with href being undefined, needed to set parent as active if child active
+    if(props.item.href == undefined && isChildActive(props.item.child)) return true
     return isLinkActive(props.item)
   })
 
@@ -32,7 +35,16 @@ export default function useItem (props) {
         activeRecordIndex(route, currentRoute) === currentRoute.matched.length - 1 &&
         isSameRouteLocationParams(currentRoute.params, route.params)
     } else {
-      return item.href === currentLocation.value
+      // would be nice to have a prop to only trigger if say sidebar os isomg external router configuration
+      // for now checking if linkComponentName is not default SidebarMenuLink, which is appropriate
+      if(vue.getCurrentInstance().setupState.linkComponentName !== 'SidebarMenuLink'){
+          // not sure if there's another way
+          // as the router isn't used here, need to manually execute this to update currentLocation
+          onRouteChange()
+          return item.href === document.URL || item.href === window.location.pathname + window.location.search + window.location.hash
+      } else {
+          return item.href === currentLocation.value;
+      }
     }
   }
 
